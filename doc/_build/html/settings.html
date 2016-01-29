@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Settings &mdash; Server Demo 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Server Demo 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Utilities" href="utilities.html" />
+    <link rel="next" title="Urls" href="urls.html" />
+    <link rel="prev" title="Utilities" href="utilities.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-settings">
+<span id="settings-the-settings-of-the-server"></span><h1>Settings: The settings of the server<a class="headerlink" href="#module-settings" title="Permalink to this headline">¶</a></h1>
+<p>There are three types of settings: <code class="docutils literal"><span class="pre">debug</span></code>, <code class="docutils literal"><span class="pre">run</span></code>, <code class="docutils literal"><span class="pre">deploy</span></code>.
+Change the settings in the conf file of each type and suppose the type whe-
+n running.</p>
+<div class="section" id="suppose-the-type-of-settings">
+<h2>Suppose the type of settings<a class="headerlink" href="#suppose-the-type-of-settings" title="Permalink to this headline">¶</a></h2>
+<p>Suppose the type of settings in a command line:</p>
+<div class="highlight-python"><div class="highlight"><pre>python server.py --config=debug
+</pre></div>
+</div>
+</div>
+<div class="section" id="debug-mode">
+<h2>Debug mode<a class="headerlink" href="#debug-mode" title="Permalink to this headline">¶</a></h2>
+<p>When in debug mode:</p>
+<ul class="simple">
+<li>Server autoreload when changes detected in the source code.</li>
+<li>The level of <code class="docutils literal"><span class="pre">logging</span></code> is set to <code class="docutils literal"><span class="pre">DEBUG</span></code>, default is <code class="docutils literal"><span class="pre">INFO</span></code></li>
+</ul>
+</div>
+<div class="section" id="defined-settings">
+<h2>Defined settings<a class="headerlink" href="#defined-settings" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="44%" />
+<col width="13%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Usage</th>
+<th class="head">Group</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>port</td>
+<td>The port listened by server</td>
+<td>basic</td>
+<td>8888</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Server name</td>
+<td>basic</td>
+<td>my_homepage</td>
+</tr>
+<tr class="row-even"><td>debug</td>
+<td>Debug mode</td>
+<td>basic</td>
+<td>False</td>
+</tr>
+<tr class="row-odd"><td>static_path</td>
+<td>Path of static files</td>
+<td>app</td>
+<td>CONSTANT</td>
+</tr>
+<tr class="row-even"><td>template_path</td>
+<td>Path of frontend templates</td>
+<td>app</td>
+<td>CONSTANT</td>
+</tr>
+<tr class="row-odd"><td>ui_modules</td>
+<td>Frontend modules</td>
+<td>app</td>
+<td>FILE</td>
+</tr>
+<tr class="row-even"><td>login_url</td>
+<td>Url of login page</td>
+<td>app</td>
+<td>&#8216;/login&#8217;</td>
+</tr>
+<tr class="row-odd"><td>cookie_secret</td>
+<td>Cookie secret</td>
+<td>app</td>
+<td>random gen-
+eration</td>
+</tr>
+<tr class="row-even"><td>database_type</td>
+<td>Database type</td>
+<td>database</td>
+<td>mysql</td>
+</tr>
+<tr class="row-odd"><td>database_address</td>
+<td>Database address</td>
+<td>database</td>
+<td>127.0.0.1</td>
+</tr>
+<tr class="row-even"><td>database_port</td>
+<td>Database port</td>
+<td>database</td>
+<td>3306</td>
+</tr>
+<tr class="row-odd"><td>database_user</td>
+<td>Database user</td>
+<td>database</td>
+<td>admin</td>
+</tr>
+<tr class="row-even"><td>database_password</td>
+<td>Database password</td>
+<td>database</td>
+<td>my_homepage</td>
+</tr>
+<tr class="row-odd"><td>mail_type</td>
+<td>Mail server type</td>
+<td>mail</td>
+<td>smtp</td>
+</tr>
+<tr class="row-even"><td>mail_server</td>
+<td>Mail server address</td>
+<td>mail</td>
+<td>127.0.0.1</td>
+</tr>
+<tr class="row-odd"><td>mail_port</td>
+<td>Mail server port</td>
+<td>mail</td>
+<td>375</td>
+</tr>
+<tr class="row-even"><td>mail_user</td>
+<td>Mail user</td>
+<td>mail</td>
+<td>noreply</td>
+</tr>
+<tr class="row-odd"><td>mail_password</td>
+<td>Mail password</td>
+<td>mail</td>
+<td>my_noreply</td>
+</tr>
+<tr class="row-even"><td>alert_list</td>
+<td>Send alert mails to</td>
+<td>mail</td>
+<td>[]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="settings.load_settings">
+<code class="descclassname">settings.</code><code class="descname">load_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/settings.html#load_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.load_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load settings from command line and config file.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Settings: The settings of the server</a><ul>
+<li><a class="reference internal" href="#suppose-the-type-of-settings">Suppose the type of settings</a></li>
+<li><a class="reference internal" href="#debug-mode">Debug mode</a></li>
+<li><a class="reference internal" href="#defined-settings">Defined settings</a></li>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="utilities.html">Utilities</a><ul>
+      <li>Previous: <a href="utilities.html" title="previous chapter">Utilities</a></li>
+      <li>Next: <a href="urls.html" title="next chapter">Urls</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/settings.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jimin Huang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/settings.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>settings &mdash; Server Demo 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Server Demo 1.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for settings</h1><div class="highlight"><pre>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: jimin.huang</span>
+<span class="c1">#</span>
+<span class="c1"># Created Time: 2015年09月03日 星期四 14时26分03秒</span>
+<span class="c1">#</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    There are three types of settings: ``debug``, ``run``, ``deploy``.</span>
+<span class="sd">    Change the settings in the conf file of each type and suppose the type whe-</span>
+<span class="sd">    n running.</span>
+
+<span class="sd">    Suppose the type of settings</span>
+<span class="sd">    ----------------------------</span>
+
+<span class="sd">    Suppose the type of settings in a command line::</span>
+
+<span class="sd">        python server.py --config=debug</span>
+
+<span class="sd">    Debug mode</span>
+<span class="sd">    -----------------------------</span>
+
+<span class="sd">    When in debug mode:</span>
+
+<span class="sd">    * Server autoreload when changes detected in the source code.</span>
+<span class="sd">    * The level of ``logging`` is set to ``DEBUG``, default is ``INFO``</span>
+
+<span class="sd">    Defined settings</span>
+<span class="sd">    -----------------------------</span>
+
+<span class="sd">    =================   ============================    ========    ===========</span>
+<span class="sd">    Name                Usage                           Group       Default</span>
+<span class="sd">    =================   ============================    ========    ===========</span>
+<span class="sd">    port                The port listened by server     basic       8888</span>
+<span class="sd">    name                Server name                     basic       my_homepage</span>
+<span class="sd">    debug               Debug mode                      basic       False</span>
+<span class="sd">    static_path         Path of static files            app         CONSTANT</span>
+<span class="sd">    template_path       Path of frontend templates      app         CONSTANT</span>
+<span class="sd">    ui_modules          Frontend modules                app         FILE</span>
+<span class="sd">    login_url           Url of login page               app         &#39;/login&#39;</span>
+<span class="sd">    cookie_secret       Cookie secret                   app         random gen-</span>
+<span class="sd">                                                                    eration</span>
+<span class="sd">    database_type       Database type                   database    mysql</span>
+<span class="sd">    database_address    Database address                database    127.0.0.1</span>
+<span class="sd">    database_port       Database port                   database    3306</span>
+<span class="sd">    database_user       Database user                   database    admin</span>
+<span class="sd">    database_password   Database password               database    my_homepage</span>
+<span class="sd">    mail_type           Mail server type                mail        smtp</span>
+<span class="sd">    mail_server         Mail server address             mail        127.0.0.1</span>
+<span class="sd">    mail_port           Mail server port                mail        375</span>
+<span class="sd">    mail_user           Mail user                       mail        noreply</span>
+<span class="sd">    mail_password       Mail password                   mail        my_noreply</span>
+<span class="sd">    alert_list          Send alert mails to             mail        \[\]</span>
+<span class="sd">    =================   ============================    ========    ===========</span>
+
+
+<span class="sd">    Methods</span>
+<span class="sd">    -----------------------------</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">tornado.options</span> <span class="kn">import</span> <span class="n">define</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">parse_command_line</span>
+<span class="kn">from</span> <span class="nn">tornado.options</span> <span class="kn">import</span> <span class="n">parse_config_file</span>
+<span class="kn">from</span> <span class="nn">tornado.log</span> <span class="kn">import</span> <span class="n">enable_pretty_logging</span>
+
+<span class="kn">from</span> <span class="nn">modules</span> <span class="kn">import</span> <span class="n">get_ui_modules</span>
+
+<span class="c1"># TODO: Settings load from environments</span>
+<span class="c1"># TODO: Logging settings which create loggers seperately for mail and database</span>
+<span class="c1"># and allow to send mail or HTTP requests</span>
+<span class="c1"># TODO: Test of load_settings</span>
+<span class="c1"># TODO: Define settings of alert mails</span>
+
+<span class="c1"># Path Defined</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROOT</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">)</span>
+<span class="n">TEMPLATE_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROOT</span><span class="p">,</span> <span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">LOG_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROOT</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">)</span>
+
+<span class="c1"># Define settings</span>
+<span class="c1"># It&#39;s so belong since someone don&#39;t hope you modify settings here</span>
+<span class="n">define</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The config file of Tornado&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8888</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The port listened by server&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;my_homepage&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Server name&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Debug mode&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">)</span>
+
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;static_path&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">STATIC_ROOT</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path of static files&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;template_path&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">TEMPLATE_ROOT</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path of frontend templates&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;ui_modules&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">get_ui_modules</span><span class="p">(),</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The frontend modules&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;login_url&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Url of login page&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;cookie_secret&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">bytes</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">bytes</span><span class="p">),</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cookie secret&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
+<span class="p">)</span>
+
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;database_type&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;mysql&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The type of database adopted&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;database&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;database_address&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The address of database&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;database&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;database_port&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The port of database&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;database&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;database_user&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The user of database&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;database&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;database_password&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;my_homepage&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The password of database&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;database&quot;</span>
+<span class="p">)</span>
+
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;mail_type&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;smtp&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The type of mail server&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;mail_server&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The mail server&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;mail_port&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;375&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The port of mail server&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;mail_user&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;noreply&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The user of mail server&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;mail_password&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;my_noreply&#39;</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The password of mail server&quot;</span><span class="p">,</span>
+    <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+<span class="n">define</span><span class="p">(</span>
+    <span class="s2">&quot;alert_list&quot;</span><span class="p">,</span>
+    <span class="n">multiple</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The receive list of alert mails&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s2">&quot;mail&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_settings"><a class="viewcode-back" href="../settings.html#settings.load_settings">[docs]</a><span class="k">def</span> <span class="nf">load_settings</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Load settings from command line and config file.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Log file prefix</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">log_file_prefix</span> <span class="o">=</span> <span class="n">LOG_ROOT</span> <span class="o">+</span> <span class="s1">&#39;/my_homepage.log&#39;</span>
+
+    <span class="c1"># Parse command line</span>
+    <span class="n">parse_command_line</span><span class="p">()</span>
+
+    <span class="c1"># Load settings from another config file if given</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+        <span class="n">parse_config_file</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">config</span> <span class="o">+</span> <span class="s1">&#39;.conf&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Debug mode</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="c1"># Logging level settings</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">logging</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span>
+        <span class="n">enable_pretty_logging</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jimin Huang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
