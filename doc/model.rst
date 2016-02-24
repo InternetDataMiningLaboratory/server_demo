@@ -1,2 +1,6 @@
 Model
 ========
+
+.. toctree::
+
+    database

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Test &mdash; Server Demo 1.0.0 documentation</title>
+    <title>Database &mdash; Server Demo 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Server Demo 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="ModulesTest" href="test/modules.html" />
-    <link rel="prev" title="Extendings" href="extendings.html" />
+    <link rel="up" title="Model" href="model.html" />
+    <link rel="next" title="View" href="view.html" />
+    <link rel="prev" title="Model" href="model.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -38,13 +39,31 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="test">
-<h1>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="test/modules.html">ModulesTest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test/database.html">DatabaseTest</a></li>
-</ul>
+  <div class="section" id="module-database">
+<span id="database"></span><h1>Database<a class="headerlink" href="#module-database" title="Permalink to this headline">¶</a></h1>
+<p>The singleton database connection. Every action of database would
+create a new connection if no connection is created before or use the exis-
+ted one.</p>
+<p>To use the connection in the function, you should decorate your function w-
+ith <code class="docutils literal"><span class="pre">get_connection</span></code></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@classmethod</span>
+<span class="nd">@get_connection</span>
+<span class="k">def</span> <span class="nf">your_function</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The decorated function must be a class method!</p>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="database.get_connection">
+<code class="descclassname">database.</code><code class="descname">get_connection</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database.html#get_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#database.get_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>The decorator with a singleton connection of database.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -53,19 +72,29 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Database</a><ul>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="extendings.html" title="previous chapter">Extendings</a></li>
-      <li>Next: <a href="test/modules.html" title="next chapter">ModulesTest</a></li>
+  <li><a href="model.html">Model</a><ul>
+      <li>Previous: <a href="model.html" title="previous chapter">Model</a></li>
+      <li>Next: <a href="view.html" title="next chapter">View</a></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/test.txt"
+      <li><a href="_sources/database.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -94,7 +123,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="_sources/test.txt"
+      <a href="_sources/database.txt"
           rel="nofollow">Page source</a>
     </div>
 
