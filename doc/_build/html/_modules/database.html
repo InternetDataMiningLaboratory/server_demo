@@ -47,6 +47,10 @@
 <span class="sd">    create a new connection if no connection is created before or use the exis-</span>
 <span class="sd">    ted one.</span>
 
+<span class="sd">    Also the decorator catch all raised exception during the connection. Once a</span>
+<span class="sd">    exception is raised, it logs an error message and sends alert emails to all</span>
+<span class="sd">    users in the alert list.</span>
+
 <span class="sd">    To use the connection in the function, you should decorate your function w-</span>
 <span class="sd">    ith ``get_connection``</span>
 
@@ -66,6 +70,7 @@
 
 <span class="kn">import</span> <span class="nn">torndb</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">email_sender</span>
 
 <span class="kn">from</span> <span class="nn">tornado.options</span> <span class="kn">import</span> <span class="n">options</span>
 
@@ -76,7 +81,6 @@
 <span class="sd">        The decorator with a singleton connection of database.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">print</span> <span class="n">options</span><span class="o">.</span><span class="n">database_address</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">connection</span> <span class="o">=</span>\
                 <span class="n">torndb</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>
@@ -90,7 +94,9 @@
                     <span class="n">options</span><span class="o">.</span><span class="n">database_user</span><span class="p">,</span>
                     <span class="n">options</span><span class="o">.</span><span class="n">database_password</span><span class="p">,</span>
                 <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Log error</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="s1">&#39;Mysql Connection Error: &#39;</span>
@@ -99,10 +105,15 @@
                     <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span>
                 <span class="p">)</span>
             <span class="p">)</span>
+
+            <span class="c1"># Send alert email</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">email_sender</span><span class="o">.</span><span class="n">async_send</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;The Exception Raised&quot;</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span>
+            <span class="p">)</span>
+
             <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="s1">&#39;query&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">function</span><span class="o">.</span><span class="n">__name__</span> <span class="k">else</span> <span class="p">[]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Database action succeed!&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
 </pre></div>

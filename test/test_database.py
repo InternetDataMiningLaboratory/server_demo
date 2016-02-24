@@ -13,7 +13,8 @@ from nose.tools import assert_equal
 @mock.patch('logging.error')
 @mock.patch('torndb.Connection')
 @mock.patch.object(tornado.options, 'options')
-def test_get_connection(mock_options, mock_connection, mock_error):
+@mock.patch('email_sender.async_send')
+def test_get_connection(mock_mail, mock_options, mock_connection, mock_error):
     '''
         Test ``database.get_connection`` decorator
     '''
@@ -31,6 +32,7 @@ def test_get_connection(mock_options, mock_connection, mock_error):
             '''
                 The test function of a normal database action.
             '''
+            mock_connection.get()
             return 'test'
 
         @classmethod
@@ -47,7 +49,7 @@ def test_get_connection(mock_options, mock_connection, mock_error):
     mock_options.database_user = 'test'
     mock_options.database_password = 'test'
 
-    # If cls.db is None or any exception raised during the build of connection
+    # If cls.db is None
     result = test_c.test_connection()
 
     # The return result is None and logs an error
@@ -62,9 +64,17 @@ def test_get_connection(mock_options, mock_connection, mock_error):
 
     # If cls.db is assigned
     test_c.db = 'test'
+
+    # If any exception raised during the action of database
+    mock_connection.get.side_effect = Exception('test')
     result = test_c.test_connection()
+    mock_mail.assert_called_with(title="The Exception Raised", message='test')
+
+    # Cancel the exception
+    mock_connection.get.side_effect = None
 
     # Return the expect result as set in the mock of connection
+    result = test_c.test_connection()
     assert_equal(result, 'test')
 
     # Or return a expected list

@@ -44,6 +44,9 @@
 <p>The singleton database connection. Every action of database would
 create a new connection if no connection is created before or use the exis-
 ted one.</p>
+<p>Also the decorator catch all raised exception during the connection. Once a
+exception is raised, it logs an error message and sends alert emails to all
+users in the alert list.</p>
 <p>To use the connection in the function, you should decorate your function w-
 ith <code class="docutils literal"><span class="pre">get_connection</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@classmethod</span>
