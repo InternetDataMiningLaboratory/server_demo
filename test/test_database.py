@@ -81,3 +81,32 @@ def test_get_connection(mock_mail, mock_options, mock_connection, mock_error):
     test_c.db = 'test'
     result = test_c.test_query()
     assert_equal(result, ['test'])
+
+
+class TestModel(object):
+    '''
+        The base class of all test class to test the persistent objects in the
+        model. The class create a mock object of the singleton database connec-
+        tion in the ``setUp`` function, which would be inherited by all son 
+        classes. Then you can use ``self.mock_db`` to replace the connection in
+        your database function.
+
+        ::
+
+            class TestPersistentObject(TestModel):
+                def test_action(self):
+                    # Set the return value
+                    self.mock_db.get.return_value = 'test'
+
+                    # Now mock_db is replaced of the connection
+                    assert action() == 'test'
+    '''
+
+    def setUp(self):
+        '''
+            Set up a mock object of the singleton database.
+        '''
+        self.mock_db = mock.Mock()
+        patch = mock.patch('torndb.Connection')
+        self.mock_connection = patch.start()
+        self.mock_connection.return_value = self.mock_db

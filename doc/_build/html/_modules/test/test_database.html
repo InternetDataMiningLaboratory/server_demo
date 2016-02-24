@@ -121,6 +121,35 @@
     <span class="n">test_c</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">test_c</span><span class="o">.</span><span class="n">test_query</span><span class="p">()</span>
     <span class="n">assert_equal</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="TestModel"><a class="viewcode-back" href="../../test/database.html#test.test_database.TestModel">[docs]</a><span class="k">class</span> <span class="nc">TestModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The base class of all test class to test the persistent objects in the</span>
+<span class="sd">        model. The class create a mock object of the singleton database connec-</span>
+<span class="sd">        tion in the ``setUp`` function, which would be inherited by all son </span>
+<span class="sd">        classes. Then you can use ``self.mock_db`` to replace the connection in</span>
+<span class="sd">        your database function.</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            class TestPersistentObject(TestModel):</span>
+<span class="sd">                def test_action(self):</span>
+<span class="sd">                    # Set the return value</span>
+<span class="sd">                    self.mock_db.get.return_value = &#39;test&#39;</span>
+
+<span class="sd">                    # Now mock_db is replaced of the connection</span>
+<span class="sd">                    assert action() == &#39;test&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="TestModel.setUp"><a class="viewcode-back" href="../../test/database.html#test.test_database.TestModel.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Set up a mock object of the singleton database.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_db</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;torndb.Connection&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_connection</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_connection</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_db</span></div></div>
 </pre></div>
 
           </div>
