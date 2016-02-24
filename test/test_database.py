@@ -43,11 +43,7 @@ def test_get_connection(mock_mail, mock_options, mock_connection, mock_error):
             '''
             return ['test']
 
-    # Build a mock object of tornado.options and set database settings
-    mock_options.database_address = 'test'
-    mock_options.database_port = 'test'
-    mock_options.database_user = 'test'
-    mock_options.database_password = 'test'
+    _mock_options(mock_options)
 
     # If cls.db is None
     result = test_c.test_connection()
@@ -83,11 +79,22 @@ def test_get_connection(mock_mail, mock_options, mock_connection, mock_error):
     assert_equal(result, ['test'])
 
 
+def _mock_options(options):
+    '''
+        Build a mock object of tornado.options and set database settings
+    '''
+    options.database_address = 'test'
+    options.database_port = 'test'
+    options.database_user = 'test'
+    options.database_password = 'test'
+    return options
+
+
 class TestModel(object):
     '''
         The base class of all test class to test the persistent objects in the
         model. The class create a mock object of the singleton database connec-
-        tion in the ``setUp`` function, which would be inherited by all son 
+        tion in the ``setUp`` function, which would be inherited by all son
         classes. Then you can use ``self.mock_db`` to replace the connection in
         your database function.
 
@@ -104,9 +111,15 @@ class TestModel(object):
 
     def setUp(self):
         '''
-            Set up a mock object of the singleton database.
+            Set up a mock object of the singleton database and a mock object of
+            options.
         '''
         self.mock_db = mock.Mock()
         patch = mock.patch('torndb.Connection')
         self.mock_connection = patch.start()
         self.mock_connection.return_value = self.mock_db
+
+        patch_options = mock.patch.object(tornado.options, 'options')
+
+        mock_options = patch_options.start()
+        _mock_options(mock_options)

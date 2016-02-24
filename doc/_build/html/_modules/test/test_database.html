@@ -83,11 +83,7 @@
 <span class="sd">            &#39;&#39;&#39;</span>
             <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
 
-    <span class="c1"># Build a mock object of tornado.options and set database settings</span>
-    <span class="n">mock_options</span><span class="o">.</span><span class="n">database_address</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
-    <span class="n">mock_options</span><span class="o">.</span><span class="n">database_port</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
-    <span class="n">mock_options</span><span class="o">.</span><span class="n">database_user</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
-    <span class="n">mock_options</span><span class="o">.</span><span class="n">database_password</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="n">_mock_options</span><span class="p">(</span><span class="n">mock_options</span><span class="p">)</span>
 
     <span class="c1"># If cls.db is None</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">test_c</span><span class="o">.</span><span class="n">test_connection</span><span class="p">()</span>
@@ -123,11 +119,22 @@
     <span class="n">assert_equal</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">])</span></div>
 
 
+<span class="k">def</span> <span class="nf">_mock_options</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Build a mock object of tornado.options and set database settings</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">database_address</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">database_port</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">database_user</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">database_password</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="k">return</span> <span class="n">options</span>
+
+
 <div class="viewcode-block" id="TestModel"><a class="viewcode-back" href="../../test/database.html#test.test_database.TestModel">[docs]</a><span class="k">class</span> <span class="nc">TestModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        The base class of all test class to test the persistent objects in the</span>
 <span class="sd">        model. The class create a mock object of the singleton database connec-</span>
-<span class="sd">        tion in the ``setUp`` function, which would be inherited by all son </span>
+<span class="sd">        tion in the ``setUp`` function, which would be inherited by all son</span>
 <span class="sd">        classes. Then you can use ``self.mock_db`` to replace the connection in</span>
 <span class="sd">        your database function.</span>
 
@@ -144,12 +151,18 @@
 
 <div class="viewcode-block" id="TestModel.setUp"><a class="viewcode-back" href="../../test/database.html#test.test_database.TestModel.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            Set up a mock object of the singleton database.</span>
+<span class="sd">            Set up a mock object of the singleton database and a mock object of</span>
+<span class="sd">            options.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_db</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
         <span class="n">patch</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;torndb.Connection&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_connection</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_connection</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_db</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_connection</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_db</span>
+
+        <span class="n">patch_options</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">)</span>
+
+        <span class="n">mock_options</span> <span class="o">=</span> <span class="n">patch_options</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">_mock_options</span><span class="p">(</span><span class="n">mock_options</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
