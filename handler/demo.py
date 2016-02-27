@@ -17,4 +17,5 @@ class DemoHandler(base.BaseHandler):
         self.render(
             'demo.html',
             welcome_string=welcome_string,
+            page_title='My Homepage',
         )
