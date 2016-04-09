@@ -33,6 +33,7 @@
     port                The port listened by server     basic       8888
     name                Server name                     basic       my_homepage
     debug               Debug mode                      basic       False
+    xsrf_cookies        Xsrf protection                 basic       True
     static_path         Path of static files            app         CONSTANT
     template_path       Path of frontend templates      app         CONSTANT
     ui_modules          Frontend modules                app         FILE
@@ -46,8 +47,7 @@
     database_password   Database password               database    my_homepage
     mail_type           Mail server type                mail        smtp
     mail_server         Mail server address             mail        127.0.0.1
-    mail_port           Mail server port                mail        375
-    mail_user           Mail user                       mail        noreply
+    mail_port           Mail server port                mail        375 mail_user           Mail user                       mail        noreply
     mail_password       Mail password                   mail        my_noreply
     alert_list          Send alert mails to             mail        \[\]
     =================   ============================    ========    ===========
@@ -85,6 +85,7 @@ define("config", help="The config file of Tornado", group="basic")
 define("port", default=8888, help="The port listened by server", group="basic")
 define("name", default='my_homepage', help="Server name", group="basic")
 define("debug", default=False, help="Debug mode", group="basic")
+define("xsrf_cookies", default=True, help="Xsrf protection", group="basic")
 
 define(
     "static_path",
