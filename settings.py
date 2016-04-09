@@ -47,7 +47,8 @@
     database_password   Database password               database    my_homepage
     mail_type           Mail server type                mail        smtp
     mail_server         Mail server address             mail        127.0.0.1
-    mail_port           Mail server port                mail        375 mail_user           Mail user                       mail        noreply
+    mail_port           Mail server port                mail        375
+    mail_user           Mail user                       mail        noreply
     mail_password       Mail password                   mail        my_noreply
     alert_list          Send alert mails to             mail        \[\]
     =================   ============================    ========    ===========
