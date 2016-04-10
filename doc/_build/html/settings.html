@@ -41,15 +41,13 @@
             
   <div class="section" id="module-settings">
 <span id="settings-the-settings-of-the-server"></span><h1>Settings: The settings of the server<a class="headerlink" href="#module-settings" title="Permalink to this headline">¶</a></h1>
-<p>There are three types of settings: <code class="docutils literal"><span class="pre">debug</span></code>, <code class="docutils literal"><span class="pre">run</span></code>, <code class="docutils literal"><span class="pre">deploy</span></code>.
-Change the settings in the conf file of each type and suppose the type whe-
-n running.</p>
-<div class="section" id="suppose-the-type-of-settings">
-<h2>Suppose the type of settings<a class="headerlink" href="#suppose-the-type-of-settings" title="Permalink to this headline">¶</a></h2>
-<p>Suppose the type of settings in a command line:</p>
+<div class="section" id="choose-the-config-file">
+<h2>Choose the config file<a class="headerlink" href="#choose-the-config-file" title="Permalink to this headline">¶</a></h2>
+<p>Choose the config file in command line:</p>
 <div class="highlight-python"><div class="highlight"><pre>python server.py --config=debug
 </pre></div>
 </div>
+<p>The server would try to read the configs from <code class="docutils literal"><span class="pre">debug.conf</span></code> at the directory.</p>
 </div>
 <div class="section" id="debug-mode">
 <h2>Debug mode<a class="headerlink" href="#debug-mode" title="Permalink to this headline">¶</a></h2>
@@ -91,83 +89,88 @@ n running.</p>
 <td>basic</td>
 <td>False</td>
 </tr>
-<tr class="row-odd"><td>static_path</td>
+<tr class="row-odd"><td>xsrf_cookies</td>
+<td>Xsrf protection</td>
+<td>basic</td>
+<td>True</td>
+</tr>
+<tr class="row-even"><td>static_path</td>
 <td>Path of static files</td>
 <td>app</td>
 <td>CONSTANT</td>
 </tr>
-<tr class="row-even"><td>template_path</td>
+<tr class="row-odd"><td>template_path</td>
 <td>Path of frontend templates</td>
 <td>app</td>
 <td>CONSTANT</td>
 </tr>
-<tr class="row-odd"><td>ui_modules</td>
+<tr class="row-even"><td>ui_modules</td>
 <td>Frontend modules</td>
 <td>app</td>
 <td>FILE</td>
 </tr>
-<tr class="row-even"><td>login_url</td>
+<tr class="row-odd"><td>login_url</td>
 <td>Url of login page</td>
 <td>app</td>
 <td>&#8216;/login&#8217;</td>
 </tr>
-<tr class="row-odd"><td>cookie_secret</td>
+<tr class="row-even"><td>cookie_secret</td>
 <td>Cookie secret</td>
 <td>app</td>
 <td>random gen-
 eration</td>
 </tr>
-<tr class="row-even"><td>database_type</td>
+<tr class="row-odd"><td>database_type</td>
 <td>Database type</td>
 <td>database</td>
 <td>mysql</td>
 </tr>
-<tr class="row-odd"><td>database_address</td>
+<tr class="row-even"><td>database_address</td>
 <td>Database address</td>
 <td>database</td>
 <td>127.0.0.1</td>
 </tr>
-<tr class="row-even"><td>database_port</td>
+<tr class="row-odd"><td>database_port</td>
 <td>Database port</td>
 <td>database</td>
 <td>3306</td>
 </tr>
-<tr class="row-odd"><td>database_user</td>
+<tr class="row-even"><td>database_user</td>
 <td>Database user</td>
 <td>database</td>
 <td>admin</td>
 </tr>
-<tr class="row-even"><td>database_password</td>
+<tr class="row-odd"><td>database_password</td>
 <td>Database password</td>
 <td>database</td>
 <td>my_homepage</td>
 </tr>
-<tr class="row-odd"><td>mail_type</td>
+<tr class="row-even"><td>mail_type</td>
 <td>Mail server type</td>
 <td>mail</td>
 <td>smtp</td>
 </tr>
-<tr class="row-even"><td>mail_server</td>
+<tr class="row-odd"><td>mail_server</td>
 <td>Mail server address</td>
 <td>mail</td>
 <td>127.0.0.1</td>
 </tr>
-<tr class="row-odd"><td>mail_port</td>
+<tr class="row-even"><td>mail_port</td>
 <td>Mail server port</td>
 <td>mail</td>
 <td>375</td>
 </tr>
-<tr class="row-even"><td>mail_user</td>
+<tr class="row-odd"><td>mail_user</td>
 <td>Mail user</td>
 <td>mail</td>
 <td>noreply</td>
 </tr>
-<tr class="row-odd"><td>mail_password</td>
+<tr class="row-even"><td>mail_password</td>
 <td>Mail password</td>
 <td>mail</td>
 <td>my_noreply</td>
 </tr>
-<tr class="row-even"><td>alert_list</td>
+<tr class="row-odd"><td>alert_list</td>
 <td>Send alert mails to</td>
 <td>mail</td>
 <td>[]</td>
@@ -183,6 +186,12 @@ eration</td>
 <dd><p>Load settings from command line and config file.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="settings.pretty_options_output">
+<code class="descclassname">settings.</code><code class="descname">pretty_options_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/settings.html#pretty_options_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.pretty_options_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output options in a pretty format.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -195,7 +204,7 @@ eration</td>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Settings: The settings of the server</a><ul>
-<li><a class="reference internal" href="#suppose-the-type-of-settings">Suppose the type of settings</a></li>
+<li><a class="reference internal" href="#choose-the-config-file">Choose the config file</a></li>
 <li><a class="reference internal" href="#debug-mode">Debug mode</a></li>
 <li><a class="reference internal" href="#defined-settings">Defined settings</a></li>
 <li><a class="reference internal" href="#methods">Methods</a></li>

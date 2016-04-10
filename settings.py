@@ -5,16 +5,14 @@
 # Created Time: 2015年09月03日 星期四 14时26分03秒
 #
 '''
-    There are three types of settings: ``debug``, ``run``, ``deploy``.
-    Change the settings in the conf file of each type and suppose the type whe-
-    n running.
-
-    Suppose the type of settings
+    Choose the config file
     ----------------------------
 
-    Suppose the type of settings in a command line::
+    Choose the config file in command line::
 
         python server.py --config=debug
+
+    The server would try to read the configs from ``debug.conf`` at the directory.
 
     Debug mode
     -----------------------------
@@ -61,6 +59,7 @@
 import os
 import base64
 import uuid
+import logging
 
 from tornado.options import define, options, parse_command_line
 from tornado.options import parse_config_file
@@ -78,7 +77,6 @@ from modules import get_ui_modules
 ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(ROOT, 'static')
 TEMPLATE_ROOT = os.path.join(ROOT, 'template')
-LOG_ROOT = os.path.join(ROOT, 'log')
 
 # Define settings
 # It's so belong since someone don't hope you modify settings here
@@ -193,18 +191,36 @@ def load_settings():
         Load settings from command line and config file.
     '''
 
-    # Log file prefix
-    options.log_file_prefix = LOG_ROOT + '/my_homepage.log'
-
     # Parse command line
+    options.logging = 'none' # To turn off logging settings
+    options.log_to_stderr = True # Log to stderr
     parse_command_line()
 
     # Load settings from another config file if given
     if options.config:
         parse_config_file(options.config + '.conf')
 
-    # Debug mode
-    if options.debug:
-        # Logging level settings
-        options.logging = 'debug'
+    # Log file prefix
+    options.log_file_prefix = ''.join((
+        'log/',
+        options.name,
+        '-',
+        str(options.port),
+        '.log',
+    ))
+
+    # Logging settings
+    if options.logging == 'none': # There are no logging settings before
+        options.logging = 'debug' if options.debug else 'info'
         enable_pretty_logging(options=options)
+
+    pretty_options_output()
+
+def pretty_options_output():
+    '''
+        Output options in a pretty format.
+    '''
+    pretty_options = ('{0}-----{1}'.format(key, value) for key, value in options.as_dict().iteritems())
+    logging.info('[SERVER SETTINGS]')
+    map(logging.info, pretty_options)
+    logging.info('#'.join(('' for index in xrange(55))))
