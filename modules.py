@@ -54,13 +54,16 @@ def get_ui_modules(module_list=None):
         [
             (
                 mod,
-                __import__(
-                    '.'.join((
-                        _MODULE_ROOT,
-                        mod,
-                    )),
+                getattr(getattr(
+                    __import__(
+                        '.'.join((
+                            _MODULE_ROOT,
+                            mod,
+                        ))
+                    ),
+                    mod),
                     name_rule_translation(mod)+'Module',
-                )
+               )
             ) for mod in module_list
         ]
     )
