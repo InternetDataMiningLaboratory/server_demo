@@ -5,3 +5,4 @@ TestModule
     :members:
 
 .. autoclass:: module.test.TestModule
+    :members:

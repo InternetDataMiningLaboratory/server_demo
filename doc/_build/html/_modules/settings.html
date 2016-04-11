@@ -74,7 +74,7 @@
 <span class="sd">    xsrf_cookies        Xsrf protection                 basic       True</span>
 <span class="sd">    static_path         Path of static files            app         CONSTANT</span>
 <span class="sd">    template_path       Path of frontend templates      app         CONSTANT</span>
-<span class="sd">    ui_modules          Frontend modules                app         FILE</span>
+<span class="sd">    ui_modules          Frontend modules                app         []</span>
 <span class="sd">    login_url           Url of login page               app         &#39;/login&#39;</span>
 <span class="sd">    cookie_secret       Cookie secret                   app         random gen-</span>
 <span class="sd">                                                                    eration</span>
@@ -140,7 +140,7 @@
 <span class="p">)</span>
 <span class="n">define</span><span class="p">(</span>
     <span class="s2">&quot;ui_modules&quot;</span><span class="p">,</span>
-    <span class="n">default</span><span class="o">=</span><span class="n">get_ui_modules</span><span class="p">(),</span>
+    <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The frontend modules&quot;</span><span class="p">,</span>
     <span class="n">group</span><span class="o">=</span><span class="s2">&quot;application&quot;</span>
 <span class="p">)</span>
@@ -254,7 +254,10 @@
         <span class="n">options</span><span class="o">.</span><span class="n">logging</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span> <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">debug</span> <span class="k">else</span> <span class="s1">&#39;info&#39;</span>
         <span class="n">enable_pretty_logging</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
 
-    <span class="n">pretty_options_output</span><span class="p">()</span></div>
+    <span class="n">pretty_options_output</span><span class="p">()</span>
+
+    <span class="c1"># Load ui modules</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">ui_modules</span> <span class="o">=</span> <span class="n">get_ui_modules</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">ui_modules</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pretty_options_output"><a class="viewcode-back" href="../settings.html#settings.pretty_options_output">[docs]</a><span class="k">def</span> <span class="nf">pretty_options_output</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>

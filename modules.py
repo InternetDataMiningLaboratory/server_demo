@@ -9,9 +9,11 @@
 
     Modules
     ----------------------------
-
-    Load in ``_MODULES`` constraint, automatically generate the ``ui_modules``
-    for options.
+    Automatically load frontend modules according to ``options.ui_modules``
+    
+    Example
+    
+        'test' -> modules.test.TestModule
 
     .. note::
         The name of module follow the name rule of python variables.
@@ -23,15 +25,11 @@
 '''
 
 _MODULE_ROOT = 'module'
-_MODULES = [
-    'test',
-]
 
 
 def name_rule_translation(name):
     '''
-        Translate the name to camel rule.
-
+        Translate the name to camel rule.  
         :returns: a new name in camel rule
     '''
     # First letter of each word capitalize
@@ -48,8 +46,12 @@ def get_ui_modules(module_list=None):
         :returns: ``ui_modules``, a list variable for options
     '''
     if module_list is None:
-        module_list = _MODULES
+        module_list = []
 
+    # Try to import module from module dir
+    # An example may explain how we achieve this
+    # Like your ui_modules in config file is ``['test']``
+    # In here the function returns ``['test', module.test.TestModule]``
     return dict(
         [
             (

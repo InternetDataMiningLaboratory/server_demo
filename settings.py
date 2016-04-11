@@ -34,7 +34,7 @@
     xsrf_cookies        Xsrf protection                 basic       True
     static_path         Path of static files            app         CONSTANT
     template_path       Path of frontend templates      app         CONSTANT
-    ui_modules          Frontend modules                app         FILE
+    ui_modules          Frontend modules                app         []
     login_url           Url of login page               app         '/login'
     cookie_secret       Cookie secret                   app         random gen-
                                                                     eration
@@ -100,7 +100,7 @@ define(
 )
 define(
     "ui_modules",
-    default=get_ui_modules(),
+    default=[],
     help="The frontend modules",
     group="application"
 )
@@ -215,6 +215,9 @@ def load_settings():
         enable_pretty_logging(options=options)
 
     pretty_options_output()
+
+    # Load ui modules
+    options.ui_modules = get_ui_modules(options.ui_modules)
 
 def pretty_options_output():
     '''

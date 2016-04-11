@@ -49,9 +49,11 @@
 
 <span class="sd">    Modules</span>
 <span class="sd">    ----------------------------</span>
-
-<span class="sd">    Load in ``_MODULES`` constraint, automatically generate the ``ui_modules``</span>
-<span class="sd">    for options.</span>
+<span class="sd">    Automatically load frontend modules according to ``options.ui_modules``</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    </span>
+<span class="sd">        &#39;test&#39; -&gt; modules.test.TestModule</span>
 
 <span class="sd">    .. note::</span>
 <span class="sd">        The name of module follow the name rule of python variables.</span>
@@ -63,15 +65,11 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="n">_MODULE_ROOT</span> <span class="o">=</span> <span class="s1">&#39;module&#39;</span>
-<span class="n">_MODULES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;test&#39;</span><span class="p">,</span>
-<span class="p">]</span>
 
 
 <div class="viewcode-block" id="name_rule_translation"><a class="viewcode-back" href="../modules.html#modules.name_rule_translation">[docs]</a><span class="k">def</span> <span class="nf">name_rule_translation</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Translate the name to camel rule.</span>
-
+<span class="sd">        Translate the name to camel rule.  </span>
 <span class="sd">        :returns: a new name in camel rule</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># First letter of each word capitalize</span>
@@ -88,19 +86,26 @@
 <span class="sd">        :returns: ``ui_modules``, a list variable for options</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">module_list</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">module_list</span> <span class="o">=</span> <span class="n">_MODULES</span>
+        <span class="n">module_list</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="c1"># Try to import module from module dir</span>
+    <span class="c1"># An example may explain how we achieve this</span>
+    <span class="c1"># Like your ui_modules in config file is ``[&#39;test&#39;]``</span>
+    <span class="c1"># In here the function returns ``[&#39;test&#39;, module.test.TestModule]``</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="p">(</span>
                 <span class="n">mod</span><span class="p">,</span>
-                <span class="nb">__import__</span><span class="p">(</span>
-                    <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
-                        <span class="n">_MODULE_ROOT</span><span class="p">,</span>
-                        <span class="n">mod</span><span class="p">,</span>
-                    <span class="p">)),</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span>
+                    <span class="nb">__import__</span><span class="p">(</span>
+                        <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                            <span class="n">_MODULE_ROOT</span><span class="p">,</span>
+                            <span class="n">mod</span><span class="p">,</span>
+                        <span class="p">))</span>
+                    <span class="p">),</span>
+                    <span class="n">mod</span><span class="p">),</span>
                     <span class="n">name_rule_translation</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;Module&#39;</span><span class="p">,</span>
-                <span class="p">)</span>
+               <span class="p">)</span>
             <span class="p">)</span> <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">module_list</span>
         <span class="p">]</span>
     <span class="p">)</span></div>

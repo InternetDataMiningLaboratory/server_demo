@@ -5,8 +5,10 @@
 '''
     The test module for the test of modules
 '''
+import tornado.web
 
-class TestModule(object):
 
-    def __init__(self):
-        print 'test'
+class TestModule(tornado.web.UIModule):
+
+    def render(self):
+        return 'Hello World'

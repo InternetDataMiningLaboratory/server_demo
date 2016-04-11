@@ -6,6 +6,8 @@
     Tests of modules
 '''
 import modules
+from module.test import TestModule
+from nose.tools import assert_equal
 
 
 def test_name_rule_translation():
@@ -20,4 +22,4 @@ def test_get_ui_modules():
     '''
         Test ``modules.get_ui_modules``
     '''
-    ui_modules = modules.get_ui_modules(['test'])
+    assert_equal(modules.get_ui_modules(['test']), {'test':TestModule})

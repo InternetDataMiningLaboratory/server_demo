@@ -44,8 +44,10 @@
 <p>Define and load frontend modules.</p>
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
-<p>Load in <code class="docutils literal"><span class="pre">_MODULES</span></code> constraint, automatically generate the <code class="docutils literal"><span class="pre">ui_modules</span></code>
-for options.</p>
+<p>Automatically load frontend modules according to <code class="docutils literal"><span class="pre">options.ui_modules</span></code></p>
+<p>Example</p>
+<blockquote>
+<div>&#8216;test&#8217; -&gt; modules.test.TestModule</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The name of module follow the name rule of python variables.</p>
@@ -72,15 +74,8 @@ for options.</p>
 <dl class="function">
 <dt id="modules.name_rule_translation">
 <code class="descclassname">modules.</code><code class="descname">name_rule_translation</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules.html#name_rule_translation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.name_rule_translation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate the name to camel rule.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a new name in camel rule</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Translate the name to camel rule.  
+:returns: a new name in camel rule</p>
 </dd></dl>
 
 </div>
