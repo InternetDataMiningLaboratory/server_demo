@@ -6,3 +6,4 @@ Test
     test/modules
     test/database
     test/model
+    test/async
